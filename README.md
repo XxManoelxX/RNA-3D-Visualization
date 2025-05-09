@@ -1,44 +1,78 @@
-# 🧬 Stanford RNA 3D Folding - Kaggle Competition
+# 🧬 RNA 3D Folding - Kaggle Competition
 
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/)
-[![Kaggle](https://img.shields.io/badge/Kaggle-Competition-blue)](https://www.kaggle.com/competitions/stanford-rna-3d-folding)
-
-Este repositório contém a pipeline desenvolvida para a competição [Stanford RNA 3D Folding](https://www.kaggle.com/competitions/stanford-rna-3d-folding) no Kaggle. O objetivo é prever estruturas 3D de moléculas de RNA com base em múltiplos alinhamentos de sequência (MSA).
+Este repositório contém a solução desenvolvida para a competição [Stanford RNA 3D Folding](https://www.kaggle.com/competitions/stanford-rna-3d-folding), hospedada no Kaggle. O desafio consiste em prever as **estruturas tridimensionais** de moléculas de RNA com base em informações de sequência e **alinhamento múltiplo de sequências (MSA)**.
 
 ---
 
-## 🔍 Visão Geral
+## 🎯 Objetivo
 
-A estrutura do RNA determina suas funções biológicas, e prever sua forma tridimensional é um desafio essencial em biologia computacional. Este projeto aborda o problema utilizando:
-
-- 📊 **Inferência de contatos** com base em MSA.
-- 🧱 **Reconstrução de estrutura 3D** baseada nos contatos previstos.
-- 🧪 **Avaliação quantitativa** por TM-score e alinhamento estrutural.
-- 🧬 **Visualização interativa** com Py3Dmol.
+Prever a **estrutura 3D de cadeias de RNA** utilizando dados derivados de **MSA (Multiple Sequence Alignment)**, que refletem informações evolutivas e estruturais compartilhadas entre moléculas homólogas. O modelo ideal deve estimar com precisão as coordenadas espaciais dos átomos de carbono (C4') em cada nucleotídeo.
 
 ---
 
-## 🗂️ Estrutura do Projeto
+## 📦 Dados
 
-├── notebooks/
-│ └── RNA_3D_Visualization_Value_MSA_com_avaliacao.ipynb
-├── src/
-│ ├── contact_inference.py
-│ ├── structure_builder.py
-│ ├── visualization.py
-│ └── evaluation.py
-├── data/
-│ ├── msa/ # Arquivos de múltiplos alinhamentos
-│ └── predictions/ # Coordenadas previstas
-├── results/
-│ └── tm_scores.csv # Avaliações TM-score
-├── environment.yml
-└── README.md
+A competição fornece os seguintes tipos de dados:
 
+### 🧬 Dados de Entrada (Input)
+- `sequence`: sequência de nucleotídeos (A, U, G, C).
+- `msa` (Multiple Sequence Alignment): alinhamento de sequências relacionadas.
+- `seq_id`: identificador único da sequência.
+- `sequence_order`: ordem da cadeia no MSA.
+- `seq_length`: número de nucleotídeos.
+
+### 📌 Dados de Treinamento
+- Arquivos `.npy` contendo as coordenadas reais (`real_structure.npy`) dos átomos C4' para milhares de cadeias de RNA conhecidas.
+
+### 🧪 Dados de Teste
+- Arquivos `.json` com metadados e estruturas sem rótulos.
+- A previsão submetida deve conter as **coordenadas (x, y, z)** para cada nucleotídeo.
 
 ---
-📈 Resultados
-As estruturas geradas foram avaliadas por TM-score comparando com estruturas de referência. A pipeline foi projetada para ser modular, permitindo testes com diferentes estratégias de inferência e geração 3D.
 
+## 🔍 Metodologia
 
+A solução implementada segue uma **pipeline modular** que pode ser dividida nas seguintes etapas:
+
+### 1. 🧠 Análise de MSA
+- A partir do MSA, foram extraídas **estatísticas de coevolução** e padrões de conservação.
+- Inferência de **prováveis pares de contato estrutural**, com base em medidas estatísticas (como frequência conjunta e covariância).
+
+### 2. 🧱 Geração de Estrutura 3D
+- Utilizando os pares de contato inferidos, uma matriz de distâncias é estimada.
+- Técnicas de otimização e métodos geométricos (como MDS – Multidimensional Scaling) são aplicados para estimar as coordenadas 3D dos nucleotídeos.
+
+### 3. 🧪 Avaliação
+- As estruturas geradas são comparadas com as reais (no conjunto de validação) utilizando a métrica **TM-score**, que avalia similaridade estrutural.
+- Também foi usado o **algoritmo de Kabsch** para alinhar rigidamente estruturas previstas e reais.
+
+### 4. 🧬 Visualização
+- As estruturas foram visualizadas com a biblioteca **Py3Dmol**, permitindo inspeção visual dos modelos gerados.
+
+---
+
+## 📈 Principais Resultados
+
+- A pipeline foi capaz de capturar corretamente diversos padrões estruturais típicos de RNA (como alças e hélices).
+- Obteve-se TM-scores consistentes acima de 0.4 para muitas sequências, o que indica **semelhança estrutural razoável** com as estruturas reais.
+- O uso do MSA provou-se crucial para revelar interações estruturais conservadas.
+
+---
+
+## 🧪 Tecnologias Utilizadas
+
+- **Python 3.10+**
+- `numpy`, `pandas`, `scikit-learn`
+- `matplotlib`, `plotly`, `py3Dmol`
+- `Biopython`
+- Ferramentas externas: **TM-score**, **US-align**
+
+---
+
+## ▶️ Como Executar
+
+1. Clone este repositório:
+
+```bash
+git clone https://github.com/seu-usuario/rna-3d-folding.git
+cd rna-3d-folding
