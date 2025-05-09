@@ -48,6 +48,8 @@ A solução implementada segue uma **pipeline modular** que pode ser dividida na
 
 ### 4. 🧬 Visualização
 - As estruturas foram visualizadas com a biblioteca **Py3Dmol**, permitindo inspeção visual dos modelos gerados.
+  
+![image](https://github.com/user-attachments/assets/426a3699-7c8b-418f-bdf2-b1788e008e51)
 
 ---
 
